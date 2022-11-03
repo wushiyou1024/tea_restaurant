@@ -15,10 +15,12 @@ import com.xmut.tearestaurant.service.SetmealDishService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +42,9 @@ public class DishController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 新增菜品
@@ -132,14 +137,22 @@ public class DishController {
      */
     @GetMapping("/list")
     public R<List<DishDto>> list(Dish dish) {
+        List<DishDto> dishDtos = null;
+        String key = "dish" + dish.getCategoryId() + "_" + dish.getStatus();
 
+        //优化阶段2022-11-3
+        //从redis中获取缓存数据
+        dishDtos = (List<DishDto>) redisTemplate.opsForValue().get(key);
+        //如果存在 直接返回， 不用查询数据库
+        if (dishDtos != null) return R.success(dishDtos);
+        //如果不存在 再查询数据库，将查询到的数据存入redis
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
         queryWrapper.eq(Dish::getStatus, 1);
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
 
         List<Dish> list = dishService.list(queryWrapper);
-        List<DishDto> dishDtos = list.stream().map((item) -> {
+        dishDtos = list.stream().map((item) -> {
             DishDto dishDto = new DishDto();
             BeanUtils.copyProperties(item, dishDto);
             Long categoryId = item.getCategoryId();
@@ -155,6 +168,7 @@ public class DishController {
             dishDto.setFlavors(dishFlavors);
             return dishDto;
         }).collect(Collectors.toList());
+        redisTemplate.opsForValue().set(key, dishDtos,60, TimeUnit.MINUTES);
         return R.success(dishDtos);
     }
 //    @GetMapping("/list")
