@@ -39,7 +39,7 @@ public class CategoryController {
     @GetMapping("/page")
     public R<Page> page(int page, int pageSize) {
         //分页构造器
-        Page<Category> pageInfo = new Page<>();
+        Page<Category> pageInfo = new Page<>(page,pageSize);
         //条件构造器,根据sort进行排序
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.orderByAsc(Category::getSort);

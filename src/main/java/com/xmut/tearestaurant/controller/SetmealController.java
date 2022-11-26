@@ -61,9 +61,9 @@ public class SetmealController {
     @GetMapping("/page")
     @ApiOperation(value = "套餐分页查询的接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "page",value = "页码",required = true),
-            @ApiImplicitParam(name = "pageSize",value = "每页记录数",required = true),
-            @ApiImplicitParam(name = "name",value = "套餐名称",required = false),
+            @ApiImplicitParam(name = "page", value = "页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true),
+            @ApiImplicitParam(name = "name", value = "套餐名称", required = false),
     })
     public R<Page> page(int page, int pageSize, String name) {
         //1.构造分页构造器

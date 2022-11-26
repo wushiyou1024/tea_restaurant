@@ -24,7 +24,7 @@ public class SMSUtils {
      */
     public static void sendMessage(String signName, String templateCode, String phoneNumbers, String param) {
 
-        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "你自己的阿里云id", "你自己的阿里云秘钥");
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "阿里云id", "阿里云秘钥");
         /** use STS Token
          DefaultProfile profile = DefaultProfile.getProfile(
          "<your-region-id>",           // The region ID

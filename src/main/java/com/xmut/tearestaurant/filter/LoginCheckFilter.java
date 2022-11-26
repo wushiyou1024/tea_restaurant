@@ -46,7 +46,10 @@ public class LoginCheckFilter implements Filter {
                 "/doc.html",
                 "/webjars/**",
                 "/swagger-resources",
-                "/v2/api-docs"
+                "/v2/api-docs",
+                "/category/list",
+                "/dish/list",
+                "/setmeal/list"
         };
         //2.本次请求是否需要检查登录状态
         boolean check = check(urls, uri);

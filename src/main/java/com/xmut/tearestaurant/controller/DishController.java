@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/dish")
 @Slf4j
+@CrossOrigin
 public class DishController {
 
     @Autowired
@@ -59,7 +60,7 @@ public class DishController {
      * @return
      */
     @PostMapping
-    @CacheEvict(value = "dish",allEntries = true)
+    @CacheEvict(value = "dish", allEntries = true)
     public R<String> save(@RequestBody DishDto dishDto) {
         dishService.saveWithFlavor(dishDto);
 //        String key="dish_"+dishDto.getCategoryId()+"_1";
@@ -132,11 +133,11 @@ public class DishController {
      * @return
      */
     @PutMapping
-    @CacheEvict(value = "dish",allEntries = true)
+    @CacheEvict(value = "dish", allEntries = true)
     public R<String> update(@RequestBody DishDto dishDto) {
         dishService.updateWithFlavor(dishDto);
         //清理某个分类redis
-        String key="dish_"+dishDto.getCategoryId()+"_1";
+        String key = "dish_" + dishDto.getCategoryId() + "_1";
         redisTemplate.delete(key);
         return R.success("新增成功");
     }
@@ -145,11 +146,12 @@ public class DishController {
     /**
      * 根据条件查询菜品数据
      * 项目优化2022-11-4 。使用springcache优化缓存
+     *
      * @param dish
      * @return
      */
     @GetMapping("/list")
-    @Cacheable(value = "dish",key = "#dish.categoryId+'_'+#dish.status")
+    @Cacheable(value = "dish", key = "#dish.categoryId+'_'+#dish.status")
     public R<List<DishDto>> list(Dish dish) {
         List<DishDto> dishDtos = null;
 //        String key = "dish" + dish.getCategoryId() + "_" + dish.getStatus();
@@ -196,4 +198,10 @@ public class DishController {
 //        List<Dish> list = dishService.list(queryWrapper);
 //        return R.success(list);
 //    }
+
+
+     @PostMapping("/status")
+    public R<String> status(){
+           return null;
+     }
 }
