@@ -21,7 +21,7 @@ public class MyMetaObjectHandle implements MetaObjectHandler {
     /**
      * 插入的时候自动填充
      * 会有一个问题，就是mp提供的这个类不支持session 所以这边不能通过session获取到当前用户
-     * 解决办法 使用threadLocal来解决
+     * 解决办法 使用threadLocal来解决 在过滤器中的时候就设置了threadlocal
      * 也就是客户端的每一个http都会创建一个thread，这个线程是唯一的
      * threaLocal为每个线程提供一个单独的存储空间，具有线程隔离的效果，只有在线程内才会获取到相应的值，
      * 线程外不能访问

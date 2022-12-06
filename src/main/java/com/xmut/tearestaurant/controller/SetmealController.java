@@ -119,4 +119,22 @@ public class SetmealController {
         List<Setmeal> list = setmealService.list(queryWrapper);
         return R.success(list);
     }
+
+    /**
+     * 起手停售操作
+     * 采用rest风格
+     */
+    @PostMapping("/status/{status}")
+    @CacheEvict(value = "setmealCache", allEntries = true)
+    public R<String> status(@PathVariable Long status, @RequestParam List<Long> ids) {
+//        System.out.println(ids+"---"+status);
+        //拿到需要修改的状态和id
+        for (Long id : ids) {
+            Setmeal setmeal = setmealService.getById(id);
+            setmeal.setStatus(status.intValue());
+            setmealService.updateById(setmeal);
+        } ;
+        //根据id修改状态
+        return R.success("修改成功");
+    }
 }

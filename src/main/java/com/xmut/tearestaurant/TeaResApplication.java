@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author Bless_Wu
  * @Description
+ * 在SpringBootApplication上使用@ServletComponentScan注解后，
+ * Servlet（控制器）、Filter（过滤器）、Listener（监听器）
+ * 可以直接通过@WebServlet、@WebFilter、@WebListener注解自动注册到Spring容器中，无需其他代码。
  * @create 2022-10-20 21:21
  */
 

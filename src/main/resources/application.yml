@@ -15,11 +15,11 @@ spring:
     host: 47.113.194.17
     port: 6379
     database: 0
-    password: Wsy12123
+    password: Xmut2516~
   cache:
     redis:
       time-to-live: 1800000 # 设置缓存过期时间
-  shardingsphere:
+  shardingsphere: #使用读写分离需要用的shardingsphere
     datasource:
       names: master,slave
       master:
@@ -27,7 +27,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://47.113.194.17:3306/reggie?characterEncoding=utf-8&useSSL=false
         username: root
-        password: Wsy12123
+        password: Xmut2615@
       slave:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver

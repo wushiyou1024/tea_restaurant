@@ -17,10 +17,10 @@ import java.io.IOException;
 /**
  * @author Bless_Wu
  * @Description 检查用户是否已经登陆过
+ * urlPatterns 拦截所有的请求
  * @create 2022-10-22 19:35
  */
 @Slf4j
-
 @WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
 public class LoginCheckFilter implements Filter {
     //路径匹配器
@@ -28,13 +28,13 @@ public class LoginCheckFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("拦截到请求");
+        System.out.println("请求过滤中.......");
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         //1.获取本次请求的url
         String uri = request.getRequestURI();
-        log.info("拦截到请求{}", uri);
-        //定义不需要请求的路径
+        log.info("截到请求{}", uri);
+        //定义不需要拦截的路径
         String[] urls = new String[]{
                 "/employee/login",
                 "/employee/logout",
@@ -51,17 +51,19 @@ public class LoginCheckFilter implements Filter {
                 "/dish/list",
                 "/setmeal/list"
         };
-        //2.本次请求是否需要检查登录状态
+        //2.本次请求是否需要进行放行
         boolean check = check(urls, uri);
         //3.如果不要处理 放行
         if (check) {
-            log.info("不需要处理{}", uri);
+            log.info("放行路径{}", uri);
             filterChain.doFilter(request, response);
             return;
         }
         //4.判断登录状态，如果已经登录 则直接放行
         if (request.getSession().getAttribute("employee") != null) {
             Long empId = (Long) request.getSession().getAttribute("employee");
+//            BaseContext.setCurrentId(empId)是将当前用户同时也保存一份到threadlocal中，
+//            因为在之后的自动填充中，mp不支持session获取用户，所以使用threadlocal进行保存
             BaseContext.setCurrentId(empId);
             filterChain.doFilter(request, response);
             return;

@@ -136,9 +136,9 @@ public class DishController {
     @CacheEvict(value = "dish", allEntries = true)
     public R<String> update(@RequestBody DishDto dishDto) {
         dishService.updateWithFlavor(dishDto);
-        //清理某个分类redis
-        String key = "dish_" + dishDto.getCategoryId() + "_1";
-        redisTemplate.delete(key);
+//        //清理某个分类redis
+//        String key = "dish_" + dishDto.getCategoryId() + "_1";
+//        redisTemplate.delete(key);
         return R.success("新增成功");
     }
 
