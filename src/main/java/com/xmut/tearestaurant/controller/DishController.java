@@ -200,8 +200,30 @@ public class DishController {
 //    }
 
 
-     @PostMapping("/status")
-    public R<String> status(){
-           return null;
+    /**
+     * 停售与起售
+     * @param status
+     * @param ids
+     * @return
+     */
+     @PostMapping("/status/{status}")
+     @CacheEvict(value = "dish", allEntries = true)
+    public R<String> status(@PathVariable Long status,@RequestParam List<Long> ids){
+         System.out.println(status);
+         System.out.println(ids);
+
+         for (Long id:ids){
+             Dish dish = dishService.getById(id);
+             dish.setStatus(status.intValue());
+             dishService.updateById(dish);
+         }
+           return R.success("修改成功");
+     }
+
+     @DeleteMapping
+     @CacheEvict(value = "dish",allEntries = true)
+      public R<String> delete(@RequestParam List<Long> ids){
+         dishService.deleteWithFlavor(ids);
+         return R.success("成功");
      }
 }

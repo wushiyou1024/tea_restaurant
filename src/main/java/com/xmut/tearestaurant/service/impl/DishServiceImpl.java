@@ -3,6 +3,7 @@ package com.xmut.tearestaurant.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xmut.tearestaurant.common.CustomException;
 import com.xmut.tearestaurant.dto.DishDto;
 import com.xmut.tearestaurant.entity.Dish;
 import com.xmut.tearestaurant.entity.DishFlavor;
@@ -79,5 +80,22 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         List<DishFlavor> list = dishFlavorService.list(queryWrapper);
         dishDto.setFlavors(list);
         return dishDto;
+    }
+
+    @Override
+    public void deleteWithFlavor(List<Long> ids) {
+        //1.先看看要删除的菜品是否是停售的状态
+        LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(Dish::getId, ids);
+        lambdaQueryWrapper.eq(Dish::getStatus, 1);
+        int count = this.count(lambdaQueryWrapper);
+        if (count > 0)
+            throw new CustomException("请先停售！");
+        //2.可以删除的话先删除dish
+        this.removeByIds(ids);
+        //3.删除口味表
+        LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(DishFlavor::getDishId, ids);
+        dishFlavorService.remove(queryWrapper);
     }
 }

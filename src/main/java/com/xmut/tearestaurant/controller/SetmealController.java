@@ -3,6 +3,7 @@ package com.xmut.tearestaurant.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xmut.tearestaurant.common.R;
+import com.xmut.tearestaurant.dto.DishDto;
 import com.xmut.tearestaurant.dto.SetmealDto;
 import com.xmut.tearestaurant.entity.Category;
 import com.xmut.tearestaurant.entity.Setmeal;
@@ -135,6 +136,29 @@ public class SetmealController {
             setmealService.updateById(setmeal);
         } ;
         //根据id修改状态
+        return R.success("修改成功");
+    }
+
+    /**
+     * 根据id查询套餐信息，然后将此信息渲染到修改套餐详情中
+     */
+    @GetMapping("/{id}")
+    public R<SetmealDto> get(@PathVariable Long id) {
+//        DishDto dishDto = dishService.getByIdWithFlavor(id);
+//        return R.success(dishDto);
+//        Setmeal setmeal = setmealService.getById(id);
+        SetmealDto setmealDto = setmealService.getSetmealAndSetmealDish(id);
+        return R.success(setmealDto);
+    }
+
+    /**
+     * 修改套餐信息
+     */
+    @PutMapping
+    @CacheEvict(value = "setmealCache", allEntries = true)
+    public R<String> update(@RequestBody SetmealDto setmealDto){
+//        System.out.println(setmealDto);
+          setmealService.updateWithDish(setmealDto);
         return R.success("修改成功");
     }
 }

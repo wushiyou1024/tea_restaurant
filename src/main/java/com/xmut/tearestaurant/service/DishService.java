@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.xmut.tearestaurant.dto.DishDto;
 import com.xmut.tearestaurant.entity.Dish;
 
+import java.util.List;
+
 /**
  * @author Bless_Wu
  * @Description
@@ -17,4 +19,6 @@ public interface DishService extends IService<Dish> {
      void updateWithFlavor(DishDto dishDto);
      //根据id查询菜品信息和口味信息
     DishDto getByIdWithFlavor(Long id);
+
+    void deleteWithFlavor(List<Long> ids);
 }
