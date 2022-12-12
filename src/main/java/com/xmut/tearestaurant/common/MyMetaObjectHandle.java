@@ -39,8 +39,11 @@ public class MyMetaObjectHandle implements MetaObjectHandler {
          * 这样 就不用每次自己手动填写了
          *
          */
-        metaObject.setValue("createUser", BaseContext.getCurrentId());
-        metaObject.setValue("updateUser", BaseContext.getCurrentId());
+        if ( BaseContext.getCurrentId()!=null){
+
+            metaObject.setValue("createUser", BaseContext.getCurrentId());
+            metaObject.setValue("updateUser", BaseContext.getCurrentId());
+        }
     }
 
     /**
@@ -52,6 +55,8 @@ public class MyMetaObjectHandle implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         log.info(metaObject.toString());
         metaObject.setValue("updateTime", LocalDateTime.now());
+        Long currentId = BaseContext.getCurrentId();
+        if (currentId!=null)
         metaObject.setValue("updateUser", BaseContext.getCurrentId());
     }
 }

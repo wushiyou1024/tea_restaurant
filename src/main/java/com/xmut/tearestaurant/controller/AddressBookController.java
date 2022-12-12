@@ -8,6 +8,7 @@ import com.xmut.tearestaurant.entity.AddressBook;
 import com.xmut.tearestaurant.service.AddressBookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,12 +25,26 @@ public class AddressBookController {
     @Autowired
     private AddressBookService addressBookService;
 
+
+    /**
+     * 修改
+     */
+    @Transactional
+    @PutMapping
+    public R<String> update(@RequestBody AddressBook addressBook) {
+//         System.out.println(addressBook);
+        addressBook.setUpdateUser(addressBook.getUserId());
+        addressBookService.updateById(addressBook);
+        return R.success("成功");
+    }
+
     /**
      * 新增地址的实现
      */
     @PostMapping
     public R<AddressBook> save(@RequestBody AddressBook addressBook) {
-        addressBook.setUserId(BaseContext.getCurrentId());
+       addressBook.setCreateUser(addressBook.getUserId());
+        addressBook.setUpdateUser(addressBook.getUserId());
         addressBookService.save(addressBook);
         return R.success(addressBook);
     }
@@ -51,9 +66,11 @@ public class AddressBookController {
     /**
      * 根据id查询地址
      */
-    @GetMapping("/{id}")
-    private R get(@PathVariable Long id) {
+    @Transactional
+    @GetMapping
+    public R<AddressBook> get(Long id) {
         AddressBook addressBook = addressBookService.getById(id);
+
         if (addressBook != null)
             return R.success(addressBook);
         else return R.error("没有找到地址");
@@ -78,13 +95,14 @@ public class AddressBookController {
     /**
      * 查询指定用户的全部地址
      */
+    @Transactional
     @GetMapping("/list")
     public R<List<AddressBook>> list(AddressBook addressBook) {
-        addressBook.setUserId(BaseContext.getCurrentId());
-
+        addressBook.setUserId(addressBook.getUserId());
         LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(null != addressBook.getUserId(), AddressBook::getUserId, addressBook.getUserId());
         queryWrapper.orderByDesc(AddressBook::getUpdateTime);
-        return R.success(addressBookService.list(queryWrapper));
+        List<AddressBook> addressBooks = addressBookService.list(queryWrapper);
+        return R.success(addressBooks);
     }
 }
