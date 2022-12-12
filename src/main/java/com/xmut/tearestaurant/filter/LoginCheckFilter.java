@@ -43,7 +43,9 @@ public class LoginCheckFilter implements Filter {
                 "/backend/**",
                 "/front/**",
                 "/common/**",
-//                "/user/sendMsg",
+                "/addressBook/*",
+                "/addressBook",
+
 //                "/user/getUser",
                 "/user/**",
                 "/doc.html",
@@ -74,7 +76,7 @@ public class LoginCheckFilter implements Filter {
         //4-2.判断移动用户登录状态，如果已经登录 则直接放行
         if (request.getSession().getAttribute("user") != null) {
             Long userId = (Long) request.getSession().getAttribute("user");
-            BaseContext.setCurrentId(userId);
+//            BaseContext.setCurrentId(userId);
             filterChain.doFilter(request, response);
             return;
         }

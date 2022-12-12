@@ -1,6 +1,7 @@
 package com.xmut.tearestaurant.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.xmut.tearestaurant.common.BaseContext;
 import com.xmut.tearestaurant.common.R;
 import com.xmut.tearestaurant.entity.User;
 import com.xmut.tearestaurant.service.UserService;
@@ -125,6 +126,7 @@ public class UserController {
 
             //如果用户登录成功了 就从redis中删除这个验证码
             redisTemplate.delete(phone);
+//            BaseContext.setCurrentId(user.getId());
             return R.success(user);
         }
 
