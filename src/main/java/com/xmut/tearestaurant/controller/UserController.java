@@ -10,11 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -34,6 +33,34 @@ public class UserController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+
+    @PostMapping("/save")
+    public R<String> save(@RequestBody User user){
+//        System.out.println(user);
+          LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
+          queryWrapper.eq(User::getPhone,user.getPhone());
+
+        User oldUser = userService.getOne(queryWrapper);
+         oldUser.setName(user.getName());
+         oldUser.setSex(user.getSex());
+         userService.updateById(oldUser);
+        return R.success("成功");
+    }
+    /**
+     * 获取用户
+     * @param user
+     * @return
+     */
+    @PostMapping("/getUser")
+    public R<User> getUser(@RequestBody User user){
+        System.out.println(user);
+         LambdaQueryWrapper<User> queryWrapper=new LambdaQueryWrapper<>();
+         queryWrapper.eq(User::getPhone,user.getPhone());
+        User user1 = userService.getOne(queryWrapper);
+
+        return R.success(user1);
+    };
 
     /**
      * 发送短信验证码
@@ -67,11 +94,11 @@ public class UserController {
      * 移动端用户登录
      *
      * @param
-     * @param session
+     * @param
      * @return
      */
     @PostMapping("/login")
-    public R<User> login(@RequestBody Map map, HttpSession session) {
+    public R<User> login(@RequestBody Map map, HttpServletRequest request) {
         log.info(map + "");
         //获取map中的手机号和验证码
         String phone = map.get("phone").toString();
@@ -94,7 +121,7 @@ public class UserController {
                 userService.save(user);
             }
             //
-            session.setAttribute("user", user.getId());
+            request.getSession().setAttribute("user", user.getId());
 
             //如果用户登录成功了 就从redis中删除这个验证码
             redisTemplate.delete(phone);

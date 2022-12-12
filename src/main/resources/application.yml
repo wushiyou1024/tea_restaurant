@@ -16,6 +16,8 @@ spring:
     port: 6379
     database: 0
     password: Xmut2516~
+    lettuce:
+      shutdown-timeout: 100
   cache:
     redis:
       time-to-live: 1800000 # 设置缓存过期时间

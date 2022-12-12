@@ -6,6 +6,7 @@ import com.xmut.tearestaurant.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -22,6 +23,7 @@ import java.io.IOException;
  */
 @Slf4j
 @WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
+@CrossOrigin
 public class LoginCheckFilter implements Filter {
     //路径匹配器
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
@@ -41,8 +43,9 @@ public class LoginCheckFilter implements Filter {
                 "/backend/**",
                 "/front/**",
                 "/common/**",
-                "/user/sendMsg",
-                "/user/login",
+//                "/user/sendMsg",
+//                "/user/getUser",
+                "/user/**",
                 "/doc.html",
                 "/webjars/**",
                 "/swagger-resources",
