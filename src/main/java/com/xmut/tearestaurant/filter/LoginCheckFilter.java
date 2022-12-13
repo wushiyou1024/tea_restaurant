@@ -44,9 +44,10 @@ public class LoginCheckFilter implements Filter {
                 "/front/**",
                 "/common/**",
                 "/addressBook/*",
+                "/order/*",
                 "/addressBook",
 
-//                "/user/getUser",
+                "/shoppingCart/*",
                 "/user/**",
                 "/doc.html",
                 "/webjars/**",

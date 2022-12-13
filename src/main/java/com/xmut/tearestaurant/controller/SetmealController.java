@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/setmeal")
 @Slf4j
 @Api(tags = "套餐相关的接口")
+@CrossOrigin
 public class SetmealController {
 
     @Autowired

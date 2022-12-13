@@ -11,4 +11,5 @@ import com.xmut.tearestaurant.entity.Orders;
 public interface OrderService extends IService<Orders> {
 
     void submit(Orders orders);
+    void saveSelfOrder(Orders orders);
 }
