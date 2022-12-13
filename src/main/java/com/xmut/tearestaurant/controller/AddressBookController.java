@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/addressBook")
+@CrossOrigin
 public class AddressBookController {
     @Autowired
     private AddressBookService addressBookService;
