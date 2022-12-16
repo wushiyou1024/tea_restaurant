@@ -2,18 +2,22 @@ package com.xmut.tearestaurant.controller;
 
 import com.alibaba.druid.sql.visitor.functions.If;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xmut.tearestaurant.common.R;
 import com.xmut.tearestaurant.dto.OrdersDto;
+import com.xmut.tearestaurant.entity.Employee;
 import com.xmut.tearestaurant.entity.OrderDetail;
 import com.xmut.tearestaurant.entity.Orders;
 import com.xmut.tearestaurant.service.OrderDetailService;
 import com.xmut.tearestaurant.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.ConsoleHandler;
 import java.util.stream.Collectors;
 
 /**
@@ -83,5 +87,44 @@ public class OrderController {
         List<OrderDetail> orderDetailList = orderDetailService.list(detailLambdaQueryWrapper);
         ordersDto.setOrdersList(orderDetailList);
         return R.success(ordersDto);
+    }
+
+    @GetMapping("/getTakeOut")
+    public R<Page> getTakeOut(int page, int pageSize, String phone) {
+        //1.构造分页构造器
+        //当前在第几页 查几条
+        Page pageInfo = new Page(page, pageSize);
+        //2.条件构造器
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.like(StringUtils.isNotEmpty(phone), Orders::getPhone, phone);
+        queryWrapper.isNotNull(Orders::getRemark);
+        queryWrapper.ne(Orders::getRemark, "");
+
+        //添加排序条件
+        queryWrapper.orderByDesc(Orders::getOrderTime);
+        //3.执行查询
+        Page list = orderService.page(pageInfo, queryWrapper);
+        return R.success(list);
+    }
+
+    @DeleteMapping("delete")
+    public R<String> delete(Long id){
+        System.out.println(id);
+        LambdaQueryWrapper<Orders> queryWrapper=new LambdaQueryWrapper<>();
+
+        queryWrapper.eq(Orders::getNumber,id);
+        orderService.remove(queryWrapper);
+        return R.success("删除成功");
+    }
+    @PutMapping("/update")
+    public R<String> update(@RequestBody Orders orders){
+//        System.out.println(orders);
+        LambdaQueryWrapper<Orders> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Orders::getNumber,orders.getNumber());
+        Orders serviceOne = orderService.getOne(queryWrapper);
+             serviceOne.setStatus(orders.getStatus());
+             orderService.updateById(serviceOne);
+        return R.success("成功");
     }
 }
