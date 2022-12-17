@@ -58,6 +58,7 @@ public class OrderController {
     public R<List<OrdersDto>> getByUser(Long userid) {
         LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Orders::getUserId, userid);
+            queryWrapper.orderByDesc(Orders::getOrderTime);
         List<Orders> ordersList = orderService.list(queryWrapper);
 
         List<OrdersDto> ordersDtoList = ordersList.stream().map((item) -> {
@@ -108,23 +109,58 @@ public class OrderController {
         return R.success(list);
     }
 
-    @DeleteMapping("delete")
-    public R<String> delete(Long id){
-        System.out.println(id);
-        LambdaQueryWrapper<Orders> queryWrapper=new LambdaQueryWrapper<>();
+    /**
+     * 获取外卖订单接口
+     * @param page
+     * @param pageSize
+     * @param phone
+     * @return
+     */
+    @GetMapping("/TakeOut")
+    public R<Page> TakeOut(int page, int pageSize, String phone) {
+        //1.构造分页构造器
+        //当前在第几页 查几条
+        Page pageInfo = new Page(page, pageSize);
+        //2.条件构造器
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
 
-        queryWrapper.eq(Orders::getNumber,id);
+        queryWrapper.like(StringUtils.isNotEmpty(phone), Orders::getPhone, phone);
+        queryWrapper.isNull(Orders::getRemark).or().eq(Orders::getRemark,"");
+
+        //添加排序条件
+        queryWrapper.orderByDesc(Orders::getOrderTime);
+        //3.执行查询
+        Page list = orderService.page(pageInfo, queryWrapper);
+        return R.success(list);
+    }
+
+    @DeleteMapping("delete")
+    public R<String> delete(Long id) {
+        System.out.println(id);
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.eq(Orders::getNumber, id);
         orderService.remove(queryWrapper);
         return R.success("删除成功");
     }
+
     @PutMapping("/update")
-    public R<String> update(@RequestBody Orders orders){
+    public R<String> update(@RequestBody Orders orders) {
 //        System.out.println(orders);
-        LambdaQueryWrapper<Orders> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(Orders::getNumber,orders.getNumber());
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Orders::getNumber, orders.getNumber());
         Orders serviceOne = orderService.getOne(queryWrapper);
-             serviceOne.setStatus(orders.getStatus());
-             orderService.updateById(serviceOne);
+        serviceOne.setStatus(orders.getStatus());
+        orderService.updateById(serviceOne);
         return R.success("成功");
+    }
+
+    @GetMapping("/getById/{id}")
+    public R<List<OrderDetail>> getById(@PathVariable Long id) {
+//        System.out.println(id);
+        LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderDetail::getOrderId, id);
+        List<OrderDetail> list = orderDetailService.list(queryWrapper);
+        return R.success(list);
     }
 }

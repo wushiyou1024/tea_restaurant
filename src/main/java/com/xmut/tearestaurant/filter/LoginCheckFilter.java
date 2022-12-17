@@ -41,12 +41,12 @@ public class LoginCheckFilter implements Filter {
                 "/employee/login",
                 "/employee/logout",
                 "/backend/**",
-                "/front/**",
+                "/music/**",
                 "/common/**",
                 "/addressBook/*",
                 "/order/*",
                 "/addressBook",
-
+                "/webSocket",
                 "/shoppingCart/*",
                 "/user/**",
                 "/doc.html",
@@ -56,6 +56,7 @@ public class LoginCheckFilter implements Filter {
                 "/category/list",
                 "/dish/list",
                 "/setmeal/list"
+
         };
         //2.本次请求是否需要进行放行
         boolean check = check(urls, uri);
