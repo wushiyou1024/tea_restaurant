@@ -3,7 +3,6 @@ package com.xmut.tearestaurant.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xmut.tearestaurant.common.BaseContext;
 import com.xmut.tearestaurant.common.CustomException;
 import com.xmut.tearestaurant.entity.*;
 import com.xmut.tearestaurant.mapper.OrderMapper;
@@ -113,7 +112,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         char a = (char) (65 + time / 2);
         int minutes = date.getMinutes();
         int seconds = date.getSeconds();
-        String s = a + "" + minutes + "" + seconds;
+        String m = minutes+"";
+
+        String se = seconds+ "";
+        if (minutes < 10) {
+            m = "0" + minutes;
+
+        }
+        if (seconds < 10) {
+
+            se = "0" + seconds;
+        }
+
+        String s = a + "" + m + "" + se;
         //设置取单号
         orders.setRemark(s);
         //2.获取当前用户的购物车数据
