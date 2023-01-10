@@ -16,6 +16,10 @@
 
 #### 项目部分截图-用户小程序部分
 
+![image](https://github.com/wsy12123/img/blob/master/b%20(6).jpg)
+
+![image](https://github.com/wsy12123/img/blob/master/b%20(5).jpg)
+
 ![image](https://github.com/wsy12123/img/blob/master/b%20(9).jpg)
 
 ![image](https://github.com/wsy12123/img/blob/master/b%20(10).jpg)
@@ -23,10 +27,6 @@
 ![image](https://github.com/wsy12123/img/blob/master/b%20(8).jpg)
 
 ![image](https://github.com/wsy12123/img/blob/master/b%20(7).jpg)
-
-![image](https://github.com/wsy12123/img/blob/master/b%20(6).jpg)
-
-![image](https://github.com/wsy12123/img/blob/master/b%20(5).jpg)
 
 ![image](https://github.com/wsy12123/img/blob/master/b%20(4).jpg)
 
