@@ -1,7 +1,6 @@
 # tea_restaurant
 
 #### 介绍
-茶餐厅外卖点单系统后端工程
 前端项目地址(含微信小程序和商家管理后台)：https://github.com/wsy12123/tea_restaurant_front.git
 #### 软件架构
 项目后端使用springboot进行开发，其中使用redis进行缓存。使用springcache进行redis缓存时候的管理。使用shardingjdbc完成mysql主从分离的设置。使用swagger生成开发文档。
