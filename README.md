@@ -10,8 +10,8 @@
 使用了websocket完成小程序用户下单之后商家收到订单提醒 并播放语言提醒。
 #### 安装教程
 
-1. 需要准备至少两台服务器，安装mysql、nginx、redis服务
-2. mysql需要先配置好主从分离，然后在application.xml 修改你的相关ip
+1. 需要准备至少两台服务器（本地运行不需要），安装mysql、nginx、redis服务
+2. mysql需要先配置好主从分离（本地运行不需要），然后在application.xml 修改你的相关ip
 3. 以上都没有也没关系，如果只是在本地运行的话，按照下面的教程来就行
 4. IDEA导入后端项目，修改你的数据库、redis地址。（本地运行，主从可以不用，使用一台数据库就行。）
 5. Hbuild导入前端项目，商家界面的直接npm install，然后npm run dev就行。
